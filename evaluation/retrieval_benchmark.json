@@ -1,5 +1,5 @@
 {
-  "benchmark_version": "0.1",
+  "benchmark_version": "0.2",
   "purpose": "Starter benchmark for evaluating ATT&CK document retrieval. Relevance labels are manual judgments for the stated query, not evidence that a technique occurred in an alert.",
   "cases": [
     {
@@ -89,6 +89,389 @@
         "T1030": {
           "label": "uncertain",
           "rationale": "Addresses transfer-size limits rather than the protocol."
+        }
+      }
+    },
+    {
+      "case_id": "DISC-001",
+      "query": "Find ATT&CK techniques for discovering running processes on a system.",
+      "relevant_technique_ids": [
+        "T1057"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1057": {
+          "label": "relevant",
+          "rationale": "Directly targets process discovery."
+        },
+        "T1007": {
+          "label": "not_relevant",
+          "rationale": "System service discovery is different from running-process discovery."
+        },
+        "T1083": {
+          "label": "not_relevant",
+          "rationale": "File and directory discovery does not directly answer the process-discovery query."
+        },
+        "T1010": {
+          "label": "not_relevant",
+          "rationale": "Application window discovery is distinct from process discovery."
+        },
+        "T1055": {
+          "label": "not_relevant",
+          "rationale": "Process injection concerns injecting code into processes, not discovering them."
+        }
+      }
+    },
+    {
+      "case_id": "DISC-002",
+      "query": "Find ATT&CK techniques for discovering local, domain, or cloud user accounts.",
+      "relevant_technique_ids": [
+        "T1087",
+        "T1087.001",
+        "T1087.002",
+        "T1087.004"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1087": {
+          "label": "relevant",
+          "rationale": "Directly covers account discovery."
+        },
+        "T1087.002": {
+          "label": "relevant",
+          "rationale": "Directly covers domain account discovery."
+        },
+        "T1087.001": {
+          "label": "relevant",
+          "rationale": "Directly covers local account discovery."
+        },
+        "T1087.004": {
+          "label": "relevant",
+          "rationale": "Directly covers cloud account discovery."
+        },
+        "T1069.002": {
+          "label": "not_relevant",
+          "rationale": "Domain group discovery concerns groups rather than user accounts."
+        }
+      }
+    },
+    {
+      "case_id": "DISC-003",
+      "query": "Find ATT&CK techniques for enumerating files and directories on a system.",
+      "relevant_technique_ids": [
+        "T1083"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1083": {
+          "label": "relevant",
+          "rationale": "Directly targets file and directory discovery."
+        },
+        "T1039": {
+          "label": "not_relevant",
+          "rationale": "Collecting data from a network shared drive is different from enumerating files and directories."
+        },
+        "T1005": {
+          "label": "not_relevant",
+          "rationale": "Collecting data from a local system does not specifically describe file and directory enumeration."
+        },
+        "T1119": {
+          "label": "not_relevant",
+          "rationale": "Automated collection is broader than discovering files and directories."
+        },
+        "T1135": {
+          "label": "not_relevant",
+          "rationale": "Network share discovery focuses on identifying network shares, not general file and directory enumeration."
+        }
+      }
+    },
+    {
+      "case_id": "EXEC-001",
+      "query": "Find ATT&CK techniques involving command shells, PowerShell, or other scripting interpreters.",
+      "relevant_technique_ids": [
+        "T1059",
+        "T1059.001",
+        "T1059.004"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1059": {
+          "label": "relevant",
+          "rationale": "Directly targets command and scripting interpreter execution."
+        },
+        "T1059.001": {
+          "label": "relevant",
+          "rationale": "PowerShell is explicitly within the query's scope."
+        },
+        "T1202": {
+          "label": "uncertain",
+          "rationale": "Indirect command execution is related to command execution but is not itself a scripting interpreter."
+        },
+        "T1059.004": {
+          "label": "relevant",
+          "rationale": "Unix Shell directly matches command-shell execution."
+        },
+        "T1027.010": {
+          "label": "not_relevant",
+          "rationale": "Command obfuscation concerns hiding commands rather than identifying command interpreters."
+        }
+      }
+    },
+    {
+      "case_id": "PERS-001",
+      "query": "Find ATT&CK techniques for establishing persistence using scheduled tasks or scheduled jobs.",
+      "relevant_technique_ids": [
+        "T1053"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1053": {
+          "label": "relevant",
+          "rationale": "Directly targets scheduled task and job execution."
+        },
+        "T1037.001": {
+          "label": "not_relevant",
+          "rationale": "Logon scripts are a different persistence mechanism from scheduled tasks or jobs."
+        },
+        "T1037.003": {
+          "label": "not_relevant",
+          "rationale": "Network logon scripts do not directly match the scheduled-task query."
+        },
+        "T1037": {
+          "label": "not_relevant",
+          "rationale": "Boot or logon initialization scripts are distinct from scheduled tasks or jobs."
+        },
+        "T1137": {
+          "label": "not_relevant",
+          "rationale": "Office application startup persistence is different from scheduled tasks or jobs."
+        }
+      }
+    },
+    {
+      "case_id": "CRED-001",
+      "query": "Find ATT&CK techniques for dumping operating-system credentials or password hashes.",
+      "relevant_technique_ids": [
+        "T1003",
+        "T1003.002"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1003": {
+          "label": "relevant",
+          "rationale": "Directly targets operating-system credential dumping."
+        },
+        "T1003.002": {
+          "label": "relevant",
+          "rationale": "Security Account Manager dumping is a specific form of OS credential dumping."
+        },
+        "T1552": {
+          "label": "not_relevant",
+          "rationale": "Unsecured credentials are broader than the specific credential-dumping behavior requested."
+        },
+        "T1110.002": {
+          "label": "not_relevant",
+          "rationale": "Password cracking is different from dumping OS credentials or password hashes."
+        },
+        "T1555": {
+          "label": "not_relevant",
+          "rationale": "Credentials from password stores are distinct from OS credential dumping."
+        }
+      }
+    },
+    {
+      "case_id": "DEF-001",
+      "query": "Find ATT&CK techniques for obfuscating files or information to hinder security analysis.",
+      "relevant_technique_ids": [
+        "T1027",
+        "T1027.013",
+        "T1001"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1027": {
+          "label": "relevant",
+          "rationale": "Directly targets obfuscated files or information."
+        },
+        "T1140": {
+          "label": "not_relevant",
+          "rationale": "Deobfuscating or decoding is the inverse activity, not obfuscating information."
+        },
+        "T1560": {
+          "label": "not_relevant",
+          "rationale": "Archiving collected data is different from obfuscation intended to hinder analysis."
+        },
+        "T1027.013": {
+          "label": "relevant",
+          "rationale": "Encrypted or encoded files are a specific form of obfuscated files or information."
+        },
+        "T1001": {
+          "label": "relevant",
+          "rationale": "Data obfuscation directly matches the query's focus on obscuring information."
+        }
+      }
+    },
+    {
+      "case_id": "LAT-001",
+      "query": "Find ATT&CK techniques for lateral movement through remote services such as SSH, RDP, or SMB.",
+      "relevant_technique_ids": [
+        "T1021"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1021": {
+          "label": "relevant",
+          "rationale": "Directly targets remote services used for lateral movement."
+        },
+        "T1210": {
+          "label": "not_relevant",
+          "rationale": "Exploitation of remote services is distinct from using remote services for lateral movement."
+        },
+        "T1071": {
+          "label": "not_relevant",
+          "rationale": "Application-layer protocol use is not the same as lateral movement through remote services."
+        },
+        "T1219.003": {
+          "label": "not_relevant",
+          "rationale": "Remote access hardware is not the remote-services technique requested."
+        },
+        "T1104": {
+          "label": "not_relevant",
+          "rationale": "Multi-stage channels do not directly address lateral movement through SSH, RDP, or SMB."
+        },
+        "T1219.002": {
+          "label": "uncertain",
+          "rationale": "Remote desktop software overlaps with remote access, but the technique focuses on remote access software rather than the Remote Services technique."
+        }
+      }
+    },
+    {
+      "case_id": "COLL-001",
+      "query": "Find ATT&CK techniques for compressing or archiving collected data before exfiltration.",
+      "relevant_technique_ids": [
+        "T1560",
+        "T1560.001",
+        "T1560.002",
+        "T1560.003"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1560": {
+          "label": "relevant",
+          "rationale": "Directly targets archiving collected data."
+        },
+        "T1560.003": {
+          "label": "relevant",
+          "rationale": "Archiving via a custom method is a specific way to archive collected data."
+        },
+        "T1560.002": {
+          "label": "relevant",
+          "rationale": "Archiving via a library directly matches archiving collected data."
+        },
+        "T1560.001": {
+          "label": "relevant",
+          "rationale": "Archiving via a utility directly matches the query."
+        },
+        "T1027.015": {
+          "label": "uncertain",
+          "rationale": "Compression overlaps with the query, but this sub-technique is categorized under obfuscation rather than the archiving technique."
+        }
+      }
+    },
+    {
+      "case_id": "EXFIL-002",
+      "query": "Find ATT&CK techniques for automatically transferring collected data out of a compromised system.",
+      "relevant_technique_ids": [
+        "T1020"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1020": {
+          "label": "relevant",
+          "rationale": "Directly targets automated exfiltration."
+        },
+        "T1119": {
+          "label": "not_relevant",
+          "rationale": "Automated collection concerns gathering data, not transferring it out."
+        },
+        "T1560": {
+          "label": "not_relevant",
+          "rationale": "Archiving data is different from automatically exfiltrating it."
+        },
+        "T1039": {
+          "label": "not_relevant",
+          "rationale": "Collecting data from a network shared drive is not the requested exfiltration behavior."
+        },
+        "T1565.002": {
+          "label": "not_relevant",
+          "rationale": "Transmitted data manipulation concerns modifying data, not automatically exfiltrating it."
+        },
+        "T1071.002": {
+          "label": "uncertain",
+          "rationale": "File-transfer protocols can support transfers, but the technique focuses on application-layer communication rather than automated exfiltration."
+        }
+      }
+    },
+    {
+      "case_id": "IMPACT-001",
+      "query": "Find ATT&CK techniques for encrypting data to disrupt availability or deny access to files.",
+      "relevant_technique_ids": [
+        "T1486"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1486": {
+          "label": "relevant",
+          "rationale": "Directly targets data encrypted for impact."
+        },
+        "T1560": {
+          "label": "not_relevant",
+          "rationale": "Archiving collected data is different from encrypting data to deny access."
+        },
+        "T1560.003": {
+          "label": "not_relevant",
+          "rationale": "Archiving via a custom method is not the requested impact technique."
+        },
+        "T1567.003": {
+          "label": "not_relevant",
+          "rationale": "Exfiltration to text storage sites does not match the encryption-for-impact query."
+        },
+        "T1573.001": {
+          "label": "uncertain",
+          "rationale": "Symmetric cryptography is related to encryption, but this technique concerns encrypted communications rather than encrypting data for impact."
+        }
+      }
+    },
+    {
+      "case_id": "DISC-004",
+      "query": "Find ATT&CK techniques for discovering other computers and systems on a network.",
+      "relevant_technique_ids": [
+        "T1018"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1018": {
+          "label": "relevant",
+          "rationale": "Directly targets remote system discovery."
+        },
+        "T1120": {
+          "label": "not_relevant",
+          "rationale": "Peripheral-device discovery is different from discovering remote computers."
+        },
+        "T1135": {
+          "label": "uncertain",
+          "rationale": "Network-share discovery can reveal network resources, but it does not directly identify remote systems generally."
+        },
+        "T1039": {
+          "label": "not_relevant",
+          "rationale": "Collecting data from a network shared drive is different from remote-system discovery."
+        },
+        "T1016": {
+          "label": "not_relevant",
+          "rationale": "Local network configuration discovery is distinct from discovering other systems."
+        },
+        "T1083": {
+          "label": "not_relevant",
+          "rationale": "File and directory discovery does not directly answer the query."
         }
       }
     }

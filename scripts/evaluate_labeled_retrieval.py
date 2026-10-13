@@ -132,8 +132,8 @@ def main():
     print(f"Mean Hit@5: {sum(hit_values) / count:.3f}")
     print(f"Mean judged coverage@5: {sum(coverage_values) / count:.3f}")
     print(
-        "\nLimitations: labels are provisional and the benchmark has only "
-        "three queries. Recall is measured against listed relevant IDs, "
+        "\nLimitations: labels are provisional and the benchmark is small. "
+        "Recall is measured against listed relevant IDs, "
         "which may not be exhaustive. These metrics evaluate retrieval, "
         "not attack detection or technique applicability."
     )

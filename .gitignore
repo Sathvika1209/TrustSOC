@@ -42,3 +42,6 @@ data/knowledge_base/mitre_attack/enterprise-attack.json
 # Original MITRE ATT&CK source and notebook checkpoints
 data/knowledge_base/mitre_attack/enterprise-attack.json
 **/.ipynb_checkpoints/
+
+*.bak
+*_backup.py
