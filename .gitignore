@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dataset files
+data/raw/
+data/processed/
+*.pcap
+*.pcapng
+
+# Generated embedding indexes and model artifacts
+data/knowledge_base/mitre_attack/*.faiss
+data/knowledge_base/mitre_attack/*.faiss.*
+data/knowledge_base/mitre_attack/*.metadata.json
+
+# Temporary files and backups
+*.bak
+*.tmp
+*~ 
+
+# Logs
+*.log
+
+# Original MITRE ATT&CK source and notebook checkpoints
+data/knowledge_base/mitre_attack/enterprise-attack.json
+**/.ipynb_checkpoints/
+
+# Original MITRE ATT&CK source and notebook checkpoints
+data/knowledge_base/mitre_attack/enterprise-attack.json
+**/.ipynb_checkpoints/

@@ -1,0 +1,96 @@
+{
+  "benchmark_version": "0.1",
+  "purpose": "Starter benchmark for evaluating ATT&CK document retrieval. Relevance labels are manual judgments for the stated query, not evidence that a technique occurred in an alert.",
+  "cases": [
+    {
+      "case_id": "NET-001",
+      "query": "Find ATT&CK techniques for discovering local network configuration, interfaces, and routing information.",
+      "relevant_technique_ids": [
+        "T1016"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1016": {
+          "label": "relevant",
+          "rationale": "Directly addresses host network configuration discovery."
+        },
+        "T1602.002": {
+          "label": "uncertain",
+          "rationale": "Focuses on network-device configuration dumps."
+        },
+        "T1016.001": {
+          "label": "not_relevant",
+          "rationale": "Focuses on Internet connectivity checks."
+        },
+        "T1016.002": {
+          "label": "uncertain",
+          "rationale": "Wi-Fi discovery is related but narrower than the query."
+        },
+        "T1083": {
+          "label": "not_relevant",
+          "rationale": "Focuses on file and directory discovery."
+        }
+      }
+    },
+    {
+      "case_id": "NET-002",
+      "query": "Find ATT&CK techniques for testing Internet connectivity using ping, traceroute, or similar utilities.",
+      "relevant_technique_ids": [
+        "T1016.001"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1016.001": {
+          "label": "relevant",
+          "rationale": "Explicitly addresses Internet connectivity testing."
+        },
+        "T1016": {
+          "label": "not_relevant",
+          "rationale": "Focuses on network configuration discovery."
+        },
+        "T1602.002": {
+          "label": "not_relevant",
+          "rationale": "Focuses on network-device configuration dumps."
+        },
+        "T1018": {
+          "label": "uncertain",
+          "rationale": "Ping can be used, but the technique focuses on remote-system discovery."
+        },
+        "T1590.004": {
+          "label": "not_relevant",
+          "rationale": "Focuses on gathering network topology for targeting."
+        }
+      }
+    },
+    {
+      "case_id": "EXFIL-001",
+      "query": "Find ATT&CK techniques for exfiltrating data over alternative protocols such as DNS, FTP, or SMTP.",
+      "relevant_technique_ids": [
+        "T1048"
+      ],
+      "label_status": "provisional_manual_label",
+      "judgments": {
+        "T1048": {
+          "label": "relevant",
+          "rationale": "Directly addresses exfiltration over alternative protocols."
+        },
+        "T1560": {
+          "label": "not_relevant",
+          "rationale": "Focuses on archiving data before exfiltration."
+        },
+        "T1071.002": {
+          "label": "uncertain",
+          "rationale": "File-transfer protocols overlap, but the description focuses on adversary communication."
+        },
+        "T1020": {
+          "label": "uncertain",
+          "rationale": "Addresses automated exfiltration without specifying the protocol."
+        },
+        "T1030": {
+          "label": "uncertain",
+          "rationale": "Addresses transfer-size limits rather than the protocol."
+        }
+      }
+    }
+  ]
+}
