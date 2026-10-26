@@ -2,36 +2,27 @@
 from pathlib import Path
 import json
 import argparse
-import hashlib
-import shutil
 
 import numpy as np
 import pandas as pd
 import faiss
 from sentence_transformers import SentenceTransformer
+from retrieval_artifacts import (
+    DOCS_PATH as SHARED_DOCS_PATH,
+    MODEL_NAME,
+    build_or_reuse_index,
+)
 
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
-MITRE_DOCS_PATH = (
-    PROJECT_DIR
-    / "data"
-    / "knowledge_base"
-    / "mitre_attack"
-    / "mitre_attack_documents.json"
-)
+MITRE_DOCS_PATH = SHARED_DOCS_PATH
 
 SAMPLE_DATA_PATH = (
     PROJECT_DIR
     / "data"
     / "processed"
     / "Friday-WorkingHours-Morning.pcap_ISCX_recovered.csv"
-)
-
-MODEL_NAME = "all-MiniLM-L6-v2"
-INDEX_PATH = (
-    PROJECT_DIR / "data" / "knowledge_base" / "mitre_attack"
-    / "mitre_attack.faiss"
 )
 
 DETECTION_EVIDENCE_PATH = (
@@ -58,98 +49,8 @@ def load_mitre_documents():
 
 
 
-def corpus_fingerprint(documents):
-    """Hash the ordered document content used to build the vector index."""
-    digest = hashlib.sha256()
-
-    for document in documents:
-        canonical_document = json.dumps(
-            document,
-            sort_keys=True,
-            ensure_ascii=False,
-            separators=(",", ":")
-        )
-        digest.update(canonical_document.encode("utf-8"))
-        digest.update(b"\\n")
-
-    return digest.hexdigest()
-
-
 def build_mitre_index(documents, model):
-    metadata_path = INDEX_PATH.with_suffix(".metadata.json")
-    current_fingerprint = corpus_fingerprint(documents)
-
-    if INDEX_PATH.exists() and metadata_path.exists():
-        try:
-            with open(metadata_path, "r", encoding="utf-8") as file:
-                saved_metadata = json.load(file)
-
-            index = faiss.read_index(str(INDEX_PATH))
-
-            metadata_matches = (
-                saved_metadata.get("corpus_fingerprint")
-                == current_fingerprint
-                and saved_metadata.get("model_name") == MODEL_NAME
-                and saved_metadata.get("vector_dimension") == index.d
-                and saved_metadata.get("document_count") == len(documents)
-                and index.ntotal == len(documents)
-            )
-
-            if metadata_matches:
-                print("Saved FAISS index and metadata match.")
-                return index
-
-            print("Saved index metadata does not match. Rebuilding...")
-
-        except (OSError, ValueError, json.JSONDecodeError) as error:
-            print(f"Could not validate saved index metadata: {error}")
-            print("Rebuilding the FAISS index...")
-
-    elif INDEX_PATH.exists():
-        print("No index metadata found. Rebuilding to establish provenance.")
-
-    print("Creating FAISS index...")
-    texts = [document.get("text", "") for document in documents]
-
-    embeddings = model.encode(
-        texts,
-        show_progress_bar=True,
-        convert_to_numpy=True
-    )
-    embeddings = np.asarray(embeddings, dtype="float32")
-
-    if embeddings.ndim != 2 or embeddings.shape[0] != len(documents):
-        raise ValueError("Embedding output does not match the document collection.")
-
-    index = faiss.IndexFlatL2(embeddings.shape[1])
-    index.add(embeddings)
-
-    INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
-
-    if INDEX_PATH.exists():
-        backup_index = INDEX_PATH.with_suffix(".faiss.pre_validation.bak")
-        if not backup_index.exists():
-            shutil.copy2(INDEX_PATH, backup_index)
-            print("Previous index backed up to:", backup_index)
-
-    faiss.write_index(index, str(INDEX_PATH))
-
-    metadata = {
-        "corpus_fingerprint": current_fingerprint,
-        "model_name": MODEL_NAME,
-        "vector_dimension": int(embeddings.shape[1]),
-        "document_count": len(documents),
-        "index_type": "IndexFlatL2"
-    }
-
-    temporary_metadata_path = metadata_path.with_suffix(".metadata.tmp")
-    with open(temporary_metadata_path, "w", encoding="utf-8") as file:
-        json.dump(metadata, file, indent=2)
-    temporary_metadata_path.replace(metadata_path)
-
-    print("Saved FAISS index to:", INDEX_PATH)
-    print("Saved index metadata to:", metadata_path)
-    return index
+    return build_or_reuse_index(faiss, documents, model, MODEL_NAME)
 
 
 def retrieve_mitre_evidence(query, documents, model, index, top_k=5):

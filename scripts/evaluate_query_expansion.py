@@ -4,13 +4,13 @@ from pathlib import Path
 import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
+from retrieval_artifacts import MODEL_NAME, load_validated_index
 
 
 ROOT = Path(__file__).resolve().parents[1]
 KB_DIR = ROOT / "data/knowledge_base/mitre_attack"
 BENCHMARK_PATH = ROOT / "evaluation/retrieval_benchmark.json"
 
-MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 TOP_K = 5
 
 # General descriptive additions, not expected technique IDs or names.
@@ -94,14 +94,8 @@ def mean(values):
 def main():
     documents = load_documents()
     cases = load_benchmark()
-    index = faiss.read_index(str(KB_DIR / "mitre_attack.faiss"))
+    index = load_validated_index(faiss, documents, MODEL_NAME)
     model = SentenceTransformer(MODEL_NAME)
-
-    if index.ntotal != len(documents):
-        raise ValueError(
-            f"Index has {index.ntotal} vectors but corpus has "
-            f"{len(documents)} documents."
-        )
 
     if index.d != model.get_sentence_embedding_dimension():
         raise ValueError(

@@ -4,30 +4,21 @@ from pathlib import Path
 import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
+from retrieval_artifacts import (
+    DOCS_PATH,
+    MODEL_NAME,
+    load_validated_index,
+)
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
-KB_DIR = PROJECT_DIR / "data" / "knowledge_base" / "mitre_attack"
-DOCS_PATH = KB_DIR / "mitre_attack_documents.json"
-INDEX_PATH = KB_DIR / "mitre_attack.faiss"
-METADATA_PATH = KB_DIR / "mitre_attack.metadata.json"
 BENCHMARK_PATH = PROJECT_DIR / "evaluation" / "retrieval_benchmark.json"
-MODEL_NAME = "all-MiniLM-L6-v2"
 TOP_K = 5
 
 
 def main():
     benchmark = json.loads(BENCHMARK_PATH.read_text(encoding="utf-8"))
     documents = json.loads(DOCS_PATH.read_text(encoding="utf-8"))
-    metadata = json.loads(METADATA_PATH.read_text(encoding="utf-8"))
-
-    if metadata.get("model_name") != MODEL_NAME:
-        raise ValueError("Embedding model does not match index metadata.")
-    if metadata.get("document_count") != len(documents):
-        raise ValueError("Document count does not match index metadata.")
-
-    index = faiss.read_index(str(INDEX_PATH))
-    if index.ntotal != len(documents):
-        raise ValueError("FAISS index size differs from document count.")
+    index = load_validated_index(faiss, documents, MODEL_NAME)
 
     model = SentenceTransformer(MODEL_NAME)
     precision_values = []
