@@ -4,14 +4,14 @@ from pathlib import Path
 import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
+from retrieval_artifacts import (
+    DOCS_PATH,
+    MODEL_NAME,
+    load_validated_index,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
-KB_DIR = ROOT / "data" / "knowledge_base" / "mitre_attack"
-DOCS_PATH = KB_DIR / "mitre_attack_documents.json"
-INDEX_PATH = KB_DIR / "mitre_attack.faiss"
 BENCHMARK_PATH = ROOT / "evaluation" / "retrieval_benchmark.json"
-
-MODEL_NAME = "all-MiniLM-L6-v2"
 TOP_K = 5
 
 # Predefined wording expansions.
@@ -62,10 +62,7 @@ def retrieve(model, index, documents, query):
 def main():
     documents = json.loads(DOCS_PATH.read_text(encoding="utf-8"))
     benchmark = json.loads(BENCHMARK_PATH.read_text(encoding="utf-8"))
-    index = faiss.read_index(str(INDEX_PATH))
-
-    if index.ntotal != len(documents):
-        raise ValueError("FAISS index and document count do not match.")
+    index = load_validated_index(faiss, documents, MODEL_NAME)
 
     model = SentenceTransformer(MODEL_NAME)
 

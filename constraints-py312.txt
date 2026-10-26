@@ -1,0 +1,7 @@
+# Compatibility constraints for the tested CPython 3.12 environment.
+# This file is intentionally separate from requirements.txt so direct
+# application dependencies remain easy to audit.
+torch==2.14.1
+transformers==5.20.2
+tokenizers==0.23.3
+safetensors==0.8.0

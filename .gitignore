@@ -26,6 +26,7 @@ data/processed/
 data/knowledge_base/mitre_attack/*.faiss
 data/knowledge_base/mitre_attack/*.faiss.*
 data/knowledge_base/mitre_attack/*.metadata.json
+data/knowledge_base/mitre_attack/*.current.json
 
 # Temporary files and backups
 *.bak

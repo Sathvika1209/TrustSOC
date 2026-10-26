@@ -1,0 +1,9 @@
+# Direct runtime and notebook dependencies.
+#
+# Tested on CPython 3.12.3 with the versions below. Use
+# constraints-py312.txt to reproduce the tested transitive resolution.
+numpy==2.5.4
+pandas==3.1.0
+faiss-cpu==1.15.1
+sentence-transformers==6.2.0
+requests==2.34.2
